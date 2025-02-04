@@ -9,12 +9,12 @@ export const Applications = pgTable(
       .notNull()
       .default(sql`gen_random_uuid()`),
     userId: text("userId").notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
     status: text("status").notNull().default("pending"),
     companyName: text("companyName").notNull(),
     jobTitle: text("jobTitle").notNull(),
     jobUrl: text("jobUrl").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
   (t) => [unique().on(t.jobUrl)],
 );
@@ -31,6 +31,8 @@ export const Documents = pgTable(
     url: text("url").notNull(),
     userId: text("userId").notNull(),
     applicationId: text("applicationId").references(() => Applications.id),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
   (t) => [unique().on(t.name, t.userId)],
 );
