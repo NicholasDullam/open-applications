@@ -15,6 +15,13 @@
       "when": 1738710250379,
       "tag": "0001_ordinary_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738712055532,
+      "tag": "0002_naive_moonstone",
+      "breakpoints": true
     }
   ]
 }
