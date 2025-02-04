@@ -17,6 +17,9 @@ jobs:
           npm install -g drizzle-orm drizzle-kit pg vercel
       - name: Pull Vercel environment variables
         run: |
-          vercel env pull --environment=production .env.local --token ${{ secrets.VERCEL_TOKEN }} --org ${{ secrets.VERCEL_ORG_ID }} --project ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel env pull --environment=production .env.local --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       - name: Apply migrations
         run: drizzle-kit migrate
