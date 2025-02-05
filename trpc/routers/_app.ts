@@ -1,9 +1,13 @@
 import { authProcedure } from "../procedures/auth";
-import { router } from "../trpc";
+import { mergeRouters, router } from "../trpc";
+import { applicationsRouter } from "./applications";
 
-export const appRouter = router({
-  greeting: authProcedure.query(({ ctx: { userId } }) => {
-    return `hello ${userId}`;
+export const appRouter = mergeRouters(
+  router({
+    applications: applicationsRouter,
+    greeting: authProcedure.query(({ ctx: { userId } }) => {
+      return `Hello ${userId}!`;
+    }),
   }),
-});
+);
 export type AppRouter = typeof appRouter;

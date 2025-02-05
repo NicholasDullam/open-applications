@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 
-export const Applications = pgTable(
+export const applications = pgTable(
   "applications",
   {
     id: text("id")
@@ -19,7 +19,7 @@ export const Applications = pgTable(
   (t) => [unique().on(t.jobUrl)],
 );
 
-export const Documents = pgTable(
+export const documents = pgTable(
   "documents",
   {
     id: text("id")
@@ -30,7 +30,7 @@ export const Documents = pgTable(
     type: text("type").notNull(),
     url: text("url").notNull(),
     userId: text("userId").notNull(),
-    applicationId: text("applicationId").references(() => Applications.id),
+    applicationId: text("applicationId").references(() => applications.id),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
