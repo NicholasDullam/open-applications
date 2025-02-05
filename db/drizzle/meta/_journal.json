@@ -29,6 +29,13 @@
       "when": 1738712246258,
       "tag": "0003_rainy_killmonger",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1738798352524,
+      "tag": "0004_cool_hex",
+      "breakpoints": true
     }
   ]
 }

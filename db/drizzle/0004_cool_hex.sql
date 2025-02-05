@@ -1,0 +1,2 @@
+ALTER TABLE "applications" DROP CONSTRAINT "applications_jobUrl_unique";--> statement-breakpoint
+ALTER TABLE "applications" ADD CONSTRAINT "applications_jobUrl_userId_unique" UNIQUE("jobUrl","userId");

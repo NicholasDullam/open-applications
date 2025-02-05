@@ -16,7 +16,7 @@ export const applications = pgTable(
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
-  (t) => [unique().on(t.jobUrl)],
+  (t) => [unique().on(t.jobUrl, t.userId)],
 );
 
 export const documents = pgTable(
