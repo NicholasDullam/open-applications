@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1738703838156,
-      "tag": "0000_wandering_queen_noir",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1738710250379,
-      "tag": "0001_ordinary_raider",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1738712055532,
-      "tag": "0002_naive_moonstone",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1738712246258,
-      "tag": "0003_rainy_killmonger",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1738798352524,
-      "tag": "0004_cool_hex",
+      "when": 1738815242417,
+      "tag": "0000_naive_famine",
       "breakpoints": true
     }
   ]

@@ -1,20 +1,28 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
+
+export const applicationStatus = pgEnum("application_status", [
+  "pending",
+  "applied",
+  "interviewing",
+  "offer",
+  "rejected",
+]);
 
 export const applications = pgTable(
   "applications",
   {
-    id: text("id")
+    id: text()
       .primaryKey()
       .notNull()
       .default(sql`gen_random_uuid()`),
-    userId: text("userId").notNull(),
-    status: text("status").notNull().default("pending"),
-    companyName: text("companyName").notNull(),
-    jobTitle: text("jobTitle").notNull(),
-    jobUrl: text("jobUrl").notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+    userId: text().notNull(),
+    status: applicationStatus().notNull(),
+    companyName: text().notNull(),
+    jobTitle: text().notNull(),
+    jobUrl: text().notNull(),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp().defaultNow().notNull(),
   },
   (t) => [unique().on(t.jobUrl, t.userId)],
 );
@@ -22,17 +30,19 @@ export const applications = pgTable(
 export const documents = pgTable(
   "documents",
   {
-    id: text("id")
+    id: text()
       .primaryKey()
-      .notNull()
-      .default(sql`gen_random_uuid()`),
-    name: text("name").notNull(),
-    type: text("type").notNull(),
-    url: text("url").notNull(),
-    userId: text("userId").notNull(),
-    applicationId: text("applicationId").references(() => applications.id),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+      .default(sql`gen_random_uuid()`)
+      .notNull(),
+    name: text().notNull(),
+    type: text().notNull(),
+    url: text().notNull(),
+    userId: text().notNull(),
+    applicationId: text()
+      .references(() => applications.id)
+      .notNull(),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp().defaultNow().notNull(),
   },
   (t) => [unique().on(t.name, t.userId)],
 );
