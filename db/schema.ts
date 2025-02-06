@@ -1,5 +1,17 @@
 import { sql } from "drizzle-orm";
-import { pgEnum, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
+import {
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from "drizzle-orm/pg-core";
+
+export const timestamps = {
+  createdAt: timestamp().defaultNow().notNull(),
+  updatedAt: timestamp(),
+};
 
 export const applicationStatus = pgEnum("application_status", [
   "pending",
@@ -12,17 +24,16 @@ export const applicationStatus = pgEnum("application_status", [
 export const applications = pgTable(
   "applications",
   {
-    id: text()
+    id: uuid()
       .primaryKey()
-      .notNull()
-      .default(sql`gen_random_uuid()`),
+      .default(sql`gen_random_uuid()`)
+      .notNull(),
     userId: text().notNull(),
     status: applicationStatus().notNull(),
     companyName: text().notNull(),
     jobTitle: text().notNull(),
     jobUrl: text().notNull(),
-    createdAt: timestamp().defaultNow().notNull(),
-    updatedAt: timestamp().defaultNow().notNull(),
+    ...timestamps,
   },
   (t) => [unique().on(t.jobUrl, t.userId)],
 );
@@ -30,7 +41,7 @@ export const applications = pgTable(
 export const documents = pgTable(
   "documents",
   {
-    id: text()
+    id: uuid()
       .primaryKey()
       .default(sql`gen_random_uuid()`)
       .notNull(),
@@ -38,11 +49,10 @@ export const documents = pgTable(
     type: text().notNull(),
     url: text().notNull(),
     userId: text().notNull(),
-    applicationId: text()
+    applicationId: uuid()
       .references(() => applications.id)
       .notNull(),
-    createdAt: timestamp().defaultNow().notNull(),
-    updatedAt: timestamp().defaultNow().notNull(),
+    ...timestamps,
   },
   (t) => [unique().on(t.name, t.userId)],
 );
