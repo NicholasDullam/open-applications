@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Open Applications",
-  description: "An open source application for managing applications",
+  description: "A means of managing my application process",
 };
 
 export default function RootLayout({
