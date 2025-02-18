@@ -29,7 +29,9 @@ CREATE TABLE "users" (
 	"lastName" text NOT NULL,
 	"externalId" text NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp
+	"updatedAt" timestamp,
+	CONSTRAINT "users_email_unique" UNIQUE("email"),
+	CONSTRAINT "users_externalId_unique" UNIQUE("externalId")
 );
 --> statement-breakpoint
 ALTER TABLE "applications" ADD CONSTRAINT "applications_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
