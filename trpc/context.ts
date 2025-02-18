@@ -9,14 +9,9 @@ export const createTRPCContext = async (auth: Auth) => {
   if (!auth.userId) throw new Error("User not found");
   const user = (
     await db
-      .select({
-        id: users.id,
-        email: users.email,
-        firstName: users.firstName,
-        lastName: users.lastName,
-      })
+      .select()
       .from(users)
-      .where(eq(users.id, auth.userId))
+      .where(eq(users.externalId, auth.userId))
       .limit(1)
   )[0];
   return { auth, user: user as typeof user | undefined };

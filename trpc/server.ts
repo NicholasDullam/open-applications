@@ -3,9 +3,10 @@ import { createHydrationHelpers } from "@trpc/react-query/rsc";
 import { cache } from "react";
 import { createQueryClient } from "./client";
 import { createTRPCContext } from "./context";
-import { AppRouter } from "./routers/_app";
-import { createCaller } from "./trpc";
+import { appRouter, AppRouter } from "./routers/_app";
+import { createCallerFactory } from "./trpc";
 
+const createCaller = createCallerFactory(appRouter);
 const createContext = cache(async () => {
   return createTRPCContext(await auth());
 });

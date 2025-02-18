@@ -1,16 +1,16 @@
-import { env } from "@/env";
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import ws from "ws";
 import * as schema from "./schema";
 
-const isDevelopment = !env.VERCEL_ENV || env.VERCEL_ENV === "development";
+const isDevelopment =
+  !process.env.VERCEL_ENV || process.env.VERCEL_ENV === "development";
 
 export const connectionString = isDevelopment
   ? "postgres://postgres:postgres@db.localtest.me:5432/main"
-  : env.DATABASE_URL;
+  : process.env.DATABASE_URL;
 
-if (isDevelopment) {
+if (isDevelopment && connectionString) {
   neonConfig.fetchEndpoint = (host) => {
     const [protocol, port] =
       host === "db.localtest.me" ? ["http", 4444] : ["https", 443];
@@ -24,9 +24,10 @@ if (isDevelopment) {
 }
 neonConfig.webSocketConstructor = ws;
 
+if (!connectionString) throw new Error("DATABASE_URL not found in environment");
+
 const sql = neon(connectionString);
 export const db = drizzle({
   client: sql,
   schema,
-  casing: "snake_case",
 });
