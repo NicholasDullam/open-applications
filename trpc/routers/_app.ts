@@ -7,8 +7,8 @@ export const appRouter = mergeRouters(
   router({
     applications: applicationsRouter,
     documents: documentsRouter,
-    greeting: authProcedure.query(({ ctx: { userId } }) => {
-      return `Hello ${userId}!`;
+    greeting: authProcedure.query(({ ctx: { user } }) => {
+      return `Hello ${user.firstName}!`;
     }),
   }),
 );

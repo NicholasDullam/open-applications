@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { middleware } from "../trpc";
 
 export const withAuth = middleware(async ({ ctx, next }) => {
-  if (!ctx.auth.userId) {
+  if (!ctx.user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "Unauthorized",
@@ -10,7 +10,7 @@ export const withAuth = middleware(async ({ ctx, next }) => {
   }
   return next({
     ctx: {
-      userId: ctx.auth.userId,
+      user: ctx.user,
     },
   });
 });

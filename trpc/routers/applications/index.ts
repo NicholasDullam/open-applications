@@ -9,26 +9,26 @@ import { router } from "../../trpc";
 export const applicationsRouter = router({
   create: authProcedure
     .input(createInsertSchema(applications).omit({ userId: true }))
-    .mutation(async ({ ctx: { userId }, input }) => {
+    .mutation(async ({ ctx: { user }, input }) => {
       return await db.insert(applications).values({
         ...input,
-        userId,
+        userId: user.id,
       });
     }),
   get: authProcedure
     .input(z.string())
-    .query(async ({ ctx: { userId }, input }) => {
+    .query(async ({ ctx: { user }, input }) => {
       return await db
         .select()
         .from(applications)
         .where(
-          and(eq(applications.id, input), eq(applications.userId, userId)),
+          and(eq(applications.id, input), eq(applications.userId, user.id)),
         );
     }),
-  all: authProcedure.query(async ({ ctx: { userId } }) => {
+  all: authProcedure.query(async ({ ctx: { user } }) => {
     return await db
       .select()
       .from(applications)
-      .where(eq(applications.userId, userId));
+      .where(eq(applications.userId, user.id));
   }),
 });

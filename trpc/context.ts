@@ -1,7 +1,25 @@
+import { db } from "@/db";
+import { users } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 
-export const createContext = async () => {
-  return { auth: await auth() };
+type Auth = Awaited<ReturnType<typeof auth>>;
+
+export const createTRPCContext = async (auth: Auth) => {
+  if (!auth.userId) throw new Error("User not found");
+  const user = (
+    await db
+      .select({
+        id: users.id,
+        email: users.email,
+        firstName: users.firstName,
+        lastName: users.lastName,
+      })
+      .from(users)
+      .where(eq(users.id, auth.userId))
+      .limit(1)
+  )[0];
+  return { auth, user: user as typeof user | undefined };
 };
 
-export type Context = Awaited<ReturnType<typeof createContext>>;
+export type Context = Awaited<ReturnType<typeof createTRPCContext>>;

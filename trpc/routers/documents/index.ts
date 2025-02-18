@@ -9,22 +9,22 @@ import { router } from "../../trpc";
 export const documentsRouter = router({
   create: authProcedure
     .input(createInsertSchema(documents).omit({ userId: true }))
-    .mutation(async ({ ctx: { userId }, input }) => {
+    .mutation(async ({ ctx: { user }, input }) => {
       return await db.insert(documents).values({
         ...input,
-        userId,
+        userId: user.id,
       });
     }),
   get: authProcedure.input(z.string()).query(async ({ ctx, input }) => {
     return await db
       .select()
       .from(documents)
-      .where(and(eq(documents.id, input), eq(documents.userId, ctx.userId)));
+      .where(and(eq(documents.id, input), eq(documents.userId, ctx.user.id)));
   }),
   all: authProcedure.query(async ({ ctx }) => {
     return await db
       .select()
       .from(documents)
-      .where(eq(documents.userId, ctx.userId));
+      .where(eq(documents.userId, ctx.user.id));
   }),
 });

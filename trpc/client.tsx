@@ -1,46 +1,71 @@
 "use client";
 
-import { getBaseUrl } from "@/lib/get-base-url";
-import type { AppRouter } from "@/trpc/routers/_app";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { getFetch, httpBatchLink, loggerLink } from "@trpc/client";
+import {
+  defaultShouldDehydrateQuery,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import { useState } from "react";
+import SuperJSON from "superjson";
 
 export const trpc = createTRPCReact<AppRouter>();
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 5 * 1000 } },
-});
+import { env } from "@/env";
+import { getBaseUrl } from "@/lib/get-base-url";
+import { AppRouter } from "./routers/_app";
 
-export default function TrpcProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 30 * 1000,
+      },
+      dehydrate: {
+        serializeData: SuperJSON.serialize,
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) ||
+          query.state.status === "pending",
+      },
+      hydrate: {
+        deserializeData: SuperJSON.deserialize,
+      },
+    },
+  });
+
+let clientQueryClientSingleton: QueryClient | undefined = undefined;
+const getQueryClient = () => {
+  if (typeof window === "undefined") return createQueryClient();
+  return (clientQueryClientSingleton ??= createQueryClient());
+};
+
+export const api = createTRPCReact<AppRouter>();
+
+export function TRPCReactProvider(props: { children: React.ReactNode }) {
+  const queryClient = getQueryClient();
+
   const [trpcClient] = useState(() =>
-    trpc.createClient({
+    api.createClient({
       links: [
         loggerLink({
-          enabled: () => true,
+          enabled: (op) =>
+            env.NODE_ENV === "development" ||
+            (op.direction === "down" && op.result instanceof Error),
         }),
-        httpBatchLink({
-          url: getBaseUrl(),
-          fetch: async (input, init?) => {
-            const fetch = getFetch();
-            return fetch(input, {
-              ...init,
-              credentials: "include",
-            });
-          },
+        unstable_httpBatchStreamLink({
+          transformer: SuperJSON,
+          url: getBaseUrl() + "/api/trpc",
         }),
       ],
     }),
   );
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
+    <QueryClientProvider client={queryClient}>
+      <api.Provider client={trpcClient} queryClient={queryClient}>
+        {props.children}
+      </api.Provider>
+    </QueryClientProvider>
   );
 }

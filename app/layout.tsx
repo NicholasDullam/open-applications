@@ -1,4 +1,4 @@
-import TrpcProvider from "@/trpc/client";
+import { TRPCReactProvider } from "@/trpc/client";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <TrpcProvider>
+      <TRPCReactProvider>
         <html lang="en">
           <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -34,7 +34,7 @@ export default function RootLayout({
             {children}
           </body>
         </html>
-      </TrpcProvider>
+      </TRPCReactProvider>
     </ClerkProvider>
   );
 }

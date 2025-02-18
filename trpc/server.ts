@@ -1,9 +1,19 @@
-import { createContext } from "./context";
-import { appRouter } from "./routers/_app";
-import { createCallerFactory } from "./trpc";
+import { auth } from "@clerk/nextjs/server";
+import { createHydrationHelpers } from "@trpc/react-query/rsc";
+import { cache } from "react";
+import { createQueryClient } from "./client";
+import { createTRPCContext } from "./context";
+import { AppRouter } from "./routers/_app";
+import { createCaller } from "./trpc";
 
-export const createCaller = createCallerFactory(appRouter);
-export const createAsyncCaller = async () => {
-  const context = await createContext();
-  return createCaller(context);
-};
+const createContext = cache(async () => {
+  return createTRPCContext(await auth());
+});
+
+const getQueryClient = cache(createQueryClient);
+const caller = createCaller(createContext);
+
+export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
+  caller,
+  getQueryClient,
+);
