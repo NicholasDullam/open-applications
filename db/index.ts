@@ -4,7 +4,8 @@ import ws from "ws";
 import * as schema from "./schema";
 
 const isDevelopment =
-  !process.env.VERCEL_ENV || process.env.VERCEL_ENV === "development";
+  !process.env.CI &&
+  (!process.env.VERCEL_ENV || process.env.VERCEL_ENV === "development");
 
 export const connectionString = isDevelopment
   ? "postgres://postgres:postgres@db.localtest.me:5432/main"
