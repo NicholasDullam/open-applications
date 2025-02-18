@@ -6,5 +6,6 @@ export const users = pgTable("users", {
   email: text().notNull(),
   firstName: text().notNull(),
   lastName: text().notNull(),
+  externalId: text().notNull(),
   ...timestamps,
 });

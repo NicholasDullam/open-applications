@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
-  apply_migrations:
+  migrate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

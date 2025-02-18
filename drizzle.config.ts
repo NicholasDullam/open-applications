@@ -1,17 +1,16 @@
 import dotenv from "dotenv";
 import type { Config } from "drizzle-kit";
 import path from "path";
+import { connectionString } from "./db";
 dotenv.config({ path: path.resolve(__dirname, ".env.local") });
 
-if (!process.env.DATABASE_URL)
-  throw new Error("DATABASE_URL not found in environment");
+if (!connectionString) throw new Error("DATABASE_URL not found in environment");
 
 export default {
-  schema: "./db/schema.ts",
+  schema: "./db/schema",
   out: "./db/drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: connectionString,
   },
-  strict: true,
 } satisfies Config;

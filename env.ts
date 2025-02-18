@@ -1,5 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { vercel } from "@t3-oss/env-nextjs/presets-zod";
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: path.resolve(__dirname, ".env.local") });
 
 import { z } from "zod";
 
@@ -13,7 +16,6 @@ export const env = createEnv({
 
   server: {
     DATABASE_URL: z.string().url(),
-    OPEN_AI_API_KEY: z.string().min(1),
   },
 
   client: {
@@ -21,7 +23,7 @@ export const env = createEnv({
   },
 
   experimental__runtimeEnv: {
-    NODE_ENV: process.env.NODE_ENV,
+    ...process.env,
   },
   skipValidation:
     !!process.env.CI || process.env.npm_lifecycle_event === "lint",
