@@ -6,7 +6,7 @@ CREATE TABLE "applications" (
 	"jobTitle" text NOT NULL,
 	"jobUrl" text NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "applications_jobUrl_userId_unique" UNIQUE("jobUrl","userId")
 );
 --> statement-breakpoint
@@ -18,7 +18,7 @@ CREATE TABLE "documents" (
 	"userId" uuid NOT NULL,
 	"applicationId" uuid NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "documents_name_userId_unique" UNIQUE("name","userId")
 );
 --> statement-breakpoint
@@ -29,7 +29,7 @@ CREATE TABLE "users" (
 	"lastName" text NOT NULL,
 	"externalId" text NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email"),
 	CONSTRAINT "users_externalId_unique" UNIQUE("externalId")
 );
